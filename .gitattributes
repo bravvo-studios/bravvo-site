@@ -1,0 +1,7 @@
+# Guarda tudo com LF no repositorio, independente do Windows. Sem isto o Git avisa a
+# cada commit que vai trocar LF por CRLF, e um dia alguem no Linux ve o arquivo inteiro
+# marcado como alterado sem ninguem ter escrito uma linha.
+* text=auto eol=lf
+*.woff2 binary
+*.webp binary
+*.png binary
