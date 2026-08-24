@@ -1,0 +1,8 @@
+# O site inteiro pode ser indexado. As duas paginas de fluxo -- o formulario de
+# exclusao e a confirmacao -- se excluem por meta robots na propria pagina, que e
+# mais confiavel: Disallow aqui impediria o rastreio, e uma pagina nao rastreada
+# ainda pode aparecer na busca sem descricao nenhuma.
+User-agent: *
+Allow: /
+
+Sitemap: https://bravvostudios.com.br/sitemap.xml

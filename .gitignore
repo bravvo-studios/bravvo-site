@@ -1,0 +1,4 @@
+# Nada de build aqui: o site e HTML e CSS estaticos, servidos como estao.
+.DS_Store
+Thumbs.db
+*.log

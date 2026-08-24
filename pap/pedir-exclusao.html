@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedir a exclusão da conta: Ponta a Ponta</title>
+<meta name="description" content="Formulário para pedir a exclusão da sua conta do Ponta a Ponta, para quem já desinstalou o jogo.">
+<meta name="theme-color" content="#f8f9fa">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://bravvostudios.com.br/pap/pedir-exclusao.html">
+<link rel="icon" href="../assets/favicon.png" type="image/png">
+<link rel="stylesheet" href="../assets/pap.css">
+</head>
+<body>
+
+<header class="faixa">
+  <div class="topo">
+    <a class="topo__marca" href="index.html">
+      <img src="../assets/pap-marca.webp" width="320" height="289" alt="">
+      Ponta a Ponta
+    </a>
+    <a class="topo__voltar" href="excluir-conta.html">← Como funciona</a>
+  </div>
+</header>
+
+<main class="faixa">
+  <div class="doc">
+
+    <div class="indice">
+      <p class="indice__titulo">Antes de enviar</p>
+      <p class="campo__dica">
+        Se você ainda tem o jogo instalado, é mais rápido apagar por lá: a exclusão
+        acontece na hora, sem esperar por ninguém.
+        <a href="excluir-conta.html#no-jogo">Ver como</a>.
+      </p>
+    </div>
+
+    <div class="doc__corpo">
+      <div>
+        <h1 class="secao__titulo">Pedir a exclusão da conta</h1>
+        <p class="capa__regra">
+          Para quem já desinstalou o Ponta a Ponta e não consegue mais apagar a conta
+          por dentro do jogo.
+        </p>
+      </div>
+
+      <div class="aviso">
+        <p>
+          A exclusão é definitiva. O perfil, as amizades e as solicitações são
+          removidos dos servidores e não há como recuperar depois.
+        </p>
+      </div>
+
+      <!--
+        O formulário posta direto, sem JavaScript: um campo de e-mail e um botão são
+        HTML desde 1995, e uma página que o Google Play vai revisar não deveria depender
+        de script para funcionar.
+
+        `_next` devolve a pessoa para uma página deste mesmo domínio. Sem ele, o serviço
+        mostra a própria tela de sucesso, com a marca dele, no meio do fluxo.
+      -->
+      <form class="formulario"
+            action="https://api.web3forms.com/submit"
+            method="POST">
+
+        <!-- TROCAR: a chave de acesso do Web3Forms, que chega por e-mail em web3forms.com -->
+        <input type="hidden" name="access_key" value="__CHAVE_DO_FORMULARIO__">
+        <input type="hidden" name="subject" value="Ponta a Ponta: pedido de exclusão de conta">
+        <input type="hidden" name="from_name" value="Site do Ponta a Ponta">
+        <input type="hidden" name="_next" value="https://bravvostudios.com.br/pap/pedido-recebido.html">
+
+        <!-- A armadilha: robô preenche, gente não vê. O serviço descarta o envio. -->
+        <div class="armadilha" aria-hidden="true">
+          <label>Deixe em branco<input type="text" name="botcheck" tabindex="-1" autocomplete="off"></label>
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="email">E-mail da conta Google</label>
+          <p class="campo__dica">
+            O mesmo que você usou para entrar no jogo. É por ele que encontramos o que
+            apagar.
+          </p>
+          <input type="email" id="email" name="email" required autocomplete="email"
+                 placeholder="voce@exemplo.com">
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="handle">
+            Identificador <span>(opcional)</span>
+          </label>
+          <p class="campo__dica">
+            O <strong>@</strong> que aparece no seu perfil. Ajuda a confirmar que a
+            conta é sua.
+          </p>
+          <input type="text" id="handle" name="identificador" autocomplete="off"
+                 placeholder="@seunome">
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="obs">
+            Alguma observação <span>(opcional)</span>
+          </label>
+          <textarea id="obs" name="observacao"
+                    placeholder="Se tiver algo que a gente precise saber."></textarea>
+        </div>
+
+        <label class="confirma">
+          <input type="checkbox" name="confirmacao" value="sim" required>
+          <span>
+            Entendi que a exclusão é definitiva e que não dá para recuperar a conta
+            depois de concluída.
+          </span>
+        </label>
+
+        <button class="botao botao--principal" type="submit">Enviar o pedido</button>
+      </form>
+
+      <section>
+        <h2>Se preferir por e-mail</h2>
+        <p>
+          O formulário e o e-mail chegam no mesmo lugar. Escreva para
+          <a href="mailto:contato@bravvostudios.com.br?subject=Excluir%20conta%20-%20Ponta%20a%20Ponta">contato@bravvostudios.com.br</a>
+          com o e-mail da conta Google usada no jogo.
+        </p>
+      </section>
+
+      <section>
+        <h2>O que acontece depois</h2>
+        <p>
+          Você recebe uma confirmação por e-mail quando a conta for apagada. O prazo é
+          de até 30 dias, e na prática costuma ser bem menos.
+        </p>
+        <p>
+          Enquanto não confirmarmos, dá para desistir: basta responder o e-mail pedindo
+          para cancelar.
+        </p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="faixa rodape">
+  <span>Ponta a Ponta · Bravvo Studios</span>
+  <span class="rodape__links">
+    <a href="../">Estúdio</a>
+    <a href="index.html">O jogo</a>
+    <a href="politica-de-privacidade.html">Privacidade</a>
+    <a href="excluir-conta.html">Excluir conta</a>
+  </span>
+</footer>
+
+</body>
+</html>

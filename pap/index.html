@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ponta a Ponta: o jogo dos pontinhos</title>
+<meta name="description" content="Ligue os pontos. Feche o quadrado. 200 fases, uma torre sem fim e duelo contra amigos. Funciona sem internet e sem login.">
+<meta name="theme-color" content="#f8f9fa">
+<link rel="icon" href="../assets/favicon.png" type="image/png">
+<link rel="stylesheet" href="../assets/pap.css">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ponta a Ponta: o jogo dos pontinhos">
+<meta property="og:description" content="200 fases, uma torre sem fim, e duelo contra amigos. Sem energia para esperar, sem moeda para comprar.">
+<meta property="og:image" content="../assets/pap-marca.webp">
+
+<link rel="canonical" href="https://bravvostudios.com.br/pap/">
+<meta property="og:url" content="https://bravvostudios.com.br/pap/">
+<meta property="og:site_name" content="Bravvo Studios">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Ponta a Ponta",
+  "alternateName": ["PaP", "Jogo dos pontinhos", "Dots and Boxes"],
+  "url": "https://bravvostudios.com.br/pap/",
+  "image": "https://bravvostudios.com.br/assets/pap-marca.webp",
+  "description": "O jogo dos pontinhos: ligue dois pontos, feche o quadrado, e quem fizer mais vence. 200 fases, uma torre sem fim e duelo contra amigos.",
+  "inLanguage": ["pt-BR", "en", "es", "ru"],
+  "genre": ["Quebra-cabeça", "Tabuleiro", "Estratégia"],
+  "gamePlatform": "Android",
+  "operatingSystem": "Android",
+  "applicationCategory": "GameApplication",
+  "playMode": ["SinglePlayer", "MultiPlayer"],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Bravvo Studios",
+    "url": "https://bravvostudios.com.br/"
+  }
+}
+</script>
+</head>
+<body>
+
+<header class="faixa">
+  <div class="topo">
+    <a class="topo__marca" href="../">
+      <img src="../assets/pap-marca.webp" width="320" height="289" alt="">
+      Ponta a Ponta
+    </a>
+    <a class="topo__voltar" href="../">← Bravvo Studios</a>
+  </div>
+</header>
+
+<main>
+
+  <!--
+    A capa é o próprio tabuleiro se desenhando: os traços entram um a um e dois
+    quadrados fecham, um de cada jogador. É a coisa mais característica do mundo do
+    jogo, e explica a regra sem uma linha de texto explicativo.
+  -->
+  <section class="faixa">
+    <div class="capa">
+      <div>
+        <p class="etiqueta">Android · em breve</p>
+        <h1 class="capa__titulo">Ligue os pontos.<br>Feche o quadrado.</h1>
+        <p class="capa__regra">
+          <strong>Quem fizer mais, vence.</strong>
+          É o jogo da última página do caderno: a regra cabe em duas frases e a
+          partida costuma virar no último traço.
+        </p>
+        <div class="capa__acoes">
+          <a class="botao botao--principal" href="#modos">O que tem dentro</a>
+          <a class="botao" href="#sem-pegadinha">Sem pegadinha</a>
+        </div>
+      </div>
+
+      <svg class="tabuleiro" viewBox="20 20 280 200" role="img"
+           aria-label="Um tabuleiro de pontinhos: traços ligando pontos e dois quadrados fechados, um laranja e um cinza.">
+        <!-- as guias apagadas: as jogadas que ainda existem -->
+        <g stroke="#cdd2d7" stroke-width="3" opacity="0.55">
+          <path d="M40 40h80M120 40h80M200 40h80"/>
+          <path d="M40 120h80M120 120h80M200 120h80"/>
+          <path d="M40 200h80M120 200h80M200 200h80"/>
+          <path d="M40 40v80M40 120v80M120 40v80M120 120v80"/>
+          <path d="M200 40v80M200 120v80M280 40v80M280 120v80"/>
+        </g>
+
+        <!-- os traços do jogador um, em laranja -->
+        <g stroke="#c7512b" stroke-width="7" fill="none">
+          <path class="traco" style="animation-delay:.15s" d="M40 40h80"/>
+          <path class="traco" style="animation-delay:.3s"  d="M40 40v80"/>
+          <path class="traco" style="animation-delay:.45s" d="M40 120h80"/>
+          <path class="traco" style="animation-delay:.6s"  d="M120 40v80"/>
+          <path class="traco" style="animation-delay:1.5s" d="M200 120h80"/>
+        </g>
+
+        <!-- os traços do adversário, em grafite -->
+        <g stroke="#333333" stroke-width="7" fill="none">
+          <path class="traco" style="animation-delay:.9s"  d="M200 40h80"/>
+          <path class="traco" style="animation-delay:1.05s" d="M200 40v80"/>
+          <path class="traco" style="animation-delay:1.2s" d="M280 40v80"/>
+        </g>
+
+        <!-- os quadrados fechados, com a marca de cada jogador -->
+        <g class="marca" style="animation-delay:.78s; transform-origin:80px 80px">
+          <rect x="44" y="44" width="72" height="72" fill="#c7512b" opacity="0.09"/>
+          <circle cx="80" cy="80" r="11" fill="#df5b30"/>
+        </g>
+        <g class="marca" style="animation-delay:1.68s; transform-origin:240px 80px">
+          <rect x="204" y="44" width="72" height="72" fill="#333333" opacity="0.07"/>
+          <rect x="230" y="70" width="20" height="20" fill="#333333"/>
+        </g>
+
+        <!-- os pontos por cima de tudo, como no jogo -->
+        <g fill="#8b8f94">
+          <circle cx="40" cy="40" r="7"/><circle cx="120" cy="40" r="7"/>
+          <circle cx="200" cy="40" r="7"/><circle cx="280" cy="40" r="7"/>
+          <circle cx="40" cy="120" r="7"/><circle cx="120" cy="120" r="7"/>
+          <circle cx="200" cy="120" r="7"/><circle cx="280" cy="120" r="7"/>
+          <circle cx="40" cy="200" r="7"/><circle cx="120" cy="200" r="7"/>
+          <circle cx="200" cy="200" r="7"/><circle cx="280" cy="200" r="7"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section class="faixa secao" id="modos">
+    <div class="secao__grade">
+      <div>
+        <p class="etiqueta">O que tem dentro</p>
+        <h2 class="secao__titulo">Quatro jeitos<br>de jogar</h2>
+      </div>
+
+      <div class="modos">
+        <article class="caixa"><span class="cantos"></span>
+          <span class="modo__numero">200</span>
+          <h3 class="modo__nome">Rumo ao mundial</h3>
+          <p class="modo__texto">
+            Começa na calçada da sua rua, contra o vizinho de nove anos. Termina em
+            Tóquio, contra quem tem quatro títulos mundiais. No meio tem o Seu Bilé,
+            que joga isso em papel de pão desde os anos setenta, e mais 198 pessoas.
+          </p>
+        </article>
+
+        <article class="caixa"><span class="cantos"></span>
+          <span class="modo__numero">∞</span>
+          <h3 class="modo__nome">A torre</h3>
+          <p class="modo__texto">
+            Andares gerados, cada vez mais duros, sem fim. Um chefe a cada dez.
+            Perder derruba a subida inteira e só o recorde fica.
+          </p>
+        </article>
+
+        <article class="caixa"><span class="cantos"></span>
+          <span class="modo__numero">2</span>
+          <h3 class="modo__nome">No mesmo aparelho</h3>
+          <p class="modo__texto">
+            Dois jogadores, um celular, sem conta nenhuma. Do tamanho de tabuleiro que
+            vocês quiserem.
+          </p>
+        </article>
+
+        <article class="caixa"><span class="cantos"></span>
+          <span class="modo__numero">1x1</span>
+          <h3 class="modo__nome">Duelo com amigos</h3>
+          <p class="modo__texto">
+            Pela internet, com placar e relógio. Entrar com o Google serve para isso, e
+            só para isso.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa secao" id="tabuleiro">
+    <div class="secao__grade">
+      <div>
+        <p class="etiqueta">O tabuleiro</p>
+        <h2 class="secao__titulo">Ele sobe junto</h2>
+      </div>
+      <div class="prosa">
+        <p>
+          A grade não fica parada nas 200 fases. Primeiro aparecem
+          <strong>buracos</strong>: quadrados que não existem e desviam as cadeias.
+          Depois <strong>paredes</strong>, traços que já vêm fechados e não são de
+          ninguém. Depois os <strong>quadrados de ouro</strong>, que valem três em vez
+          de um. A partir daí compensa entregar dois para tomar um.
+        </p>
+        <p>
+          Perto do fim entra o <strong>relógio</strong>. Até ali dava para contar a
+          cadeia com calma.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa secao" id="sem-pegadinha">
+    <div class="secao__grade">
+      <div>
+        <p class="etiqueta">Sem pegadinha</p>
+        <h2 class="secao__titulo">Abre e joga</h2>
+      </div>
+      <div class="prosa">
+        <p>
+          O jogo inteiro funciona <strong>sem internet e sem login</strong>. Não tem
+          energia para esperar, não tem moeda para comprar, não tem chat.
+        </p>
+        <p>
+          A conta do Google serve para duas coisas: jogar contra um amigo pela
+          internet e levar o progresso para outro aparelho. Quem não quiser joga como
+          convidado. As 200 fases, a torre e os dois jogadores no mesmo aparelho
+          continuam inteiros.
+        </p>
+        <p>
+          Tem anúncio, e ele fica no menu, entre partidas. Nunca no meio de uma.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="faixa rodape">
+  <span>Ponta a Ponta · Bravvo Studios</span>
+  <span class="rodape__links">
+    <a href="../">Estúdio</a>
+    <a href="politica-de-privacidade.html">Privacidade</a>
+    <a href="excluir-conta.html">Excluir conta</a>
+    <a href="mailto:contato@bravvostudios.com.br">Contato</a>
+  </span>
+</footer>
+
+</body>
+</html>

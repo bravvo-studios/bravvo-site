@@ -1,0 +1,508 @@
+/*
+ * Bravvo Studios — o sistema visual da raiz do site.
+ *
+ * ### De onde vem
+ *
+ * Da logo, e de nada além dela. A marca é uma fera cortada em **chapa de metal
+ * facetada**: planos retos que se encontram em arestas vivas, cada um pegando a luz num
+ * ângulo diferente, sobre preto. O wordmark repete o gesto — itálico, pesado, com os
+ * cantos das letras chanfrados.
+ *
+ * Então o site inteiro é feito de planos chanfrados. Nenhum canto arredondado, em lugar
+ * nenhum: `clip-path` corta os cantos como uma chapa cortada, e a superfície carrega um
+ * gradiente diagonal fraco que é o brilho do aço escovado. Ao passar o ponteiro, a luz
+ * **rasa** o plano — como girar uma peça de metal sob a lâmpada da oficina.
+ *
+ * ### A brasa
+ *
+ * O único acento é `--brasa`, e ele é exatamente o laranja do Ponta a Ponta. Não é
+ * coincidência aproveitada: é aço na temperatura de trabalho, e é a ponte entre os dois
+ * mundos do site. O estúdio é a forja, o jogo é o papel. Inventar uma segunda cor de
+ * marca teria diluído as duas.
+ *
+ * ### Largura
+ *
+ * Não existe teto de largura no invólucro. O que tem teto é a **medida do texto** — um
+ * parágrafo com 130 caracteres por linha é ilegível em qualquer tela. Grade cresce,
+ * parágrafo não: é essa a diferença entre usar a tela e esticar a coluna.
+ */
+
+@import url("fontes.css");
+
+:root {
+  /* Superfícies: um matiz só, variando a claridade em saltos de ~4%. */
+  --breu: #08090a;
+  --plano: #101215;
+  --plano-alto: #191c21;
+
+  /* O metal. `escovado` é o meio-tom da logo; `brilho` é o especular. */
+  --escovado: #c6cbd1;
+  --brilho: #f4f6f8;
+  --fosco: #7c838c;
+  --fosco-fraco: #565c64;
+
+  /* Aresta: rgba, e não hex — uma borda sólida no escuro vira um risco duro. */
+  --aresta: rgba(255, 255, 255, 0.09);
+  --aresta-forte: rgba(255, 255, 255, 0.16);
+
+  /* O aço na temperatura de trabalho. A mesma laranja do jogo. */
+  --brasa: #c7512b;
+  --brasa-viva: #e0673c;
+
+  --chanfro: 14px;
+  --chanfro-p: 8px;
+
+  /* Ritmo. Base 4px; as seções respiram, os planos são apertados. */
+  --secao: clamp(4.5rem, 9vw, 9rem);
+  --margem-lateral: clamp(1.25rem, 5vw, 5.5rem);
+  --medida: 62ch;
+
+  --curva: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--breu);
+  color: var(--escovado);
+  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 0.94rem + 0.3vw, 1.125rem);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+
+/* A oficina não é lisa: uma trama diagonal fraquíssima, que só se percebe de perto. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.014) 0 1px,
+    transparent 1px 7px
+  );
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Chakra Petch", "IBM Plex Sans", sans-serif;
+  color: var(--brilho);
+  text-wrap: balance;
+  margin: 0;
+  /* Tipo grande pede tracking negativo; sem isso lê como documento, não como marca. */
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+p {
+  margin: 0;
+  max-width: var(--medida);
+}
+
+a {
+  color: var(--brilho);
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--aresta-forte);
+  transition: color 0.16s var(--curva), text-decoration-color 0.16s var(--curva);
+}
+
+a:hover {
+  color: var(--brasa-viva);
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brasa-viva);
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ o invólucro */
+
+.faixa {
+  padding-inline: var(--margem-lateral);
+}
+
+.faixa > * {
+  /* Teto largo, e não estreito: numa tela de 2560 a grade se abre, não sobra margem. */
+  max-width: 108rem;
+  margin-inline: auto;
+}
+
+/* --------------------------------------------------------------------- a etiqueta
+ *
+ * O "STUDIOS" da logo: versalete pequeno, muito espaçado, entre dois filetes. É o
+ * elemento que se repete como rótulo de seção pelo site inteiro.
+ */
+
+.etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fosco);
+  margin: 0 0 1.4rem;
+}
+
+.etiqueta::before,
+.etiqueta::after {
+  content: "";
+  height: 1px;
+  background: var(--aresta);
+}
+
+.etiqueta::before {
+  width: 2rem;
+  flex: none;
+}
+
+.etiqueta::after {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------------- o plano
+ *
+ * A peça central do sistema. Chapa cortada nos cantos, superfície com o gradiente
+ * diagonal do aço escovado, aresta de 1px. Sem sombra: metal assenta, não flutua.
+ */
+
+.plano {
+  position: relative;
+  background:
+    linear-gradient(148deg, rgba(255, 255, 255, 0.045), transparent 42%),
+    var(--plano);
+  border: 1px solid var(--aresta);
+  clip-path: polygon(
+    var(--chanfro) 0,
+    100% 0,
+    100% calc(100% - var(--chanfro)),
+    calc(100% - var(--chanfro)) 100%,
+    0 100%,
+    0 var(--chanfro)
+  );
+  padding: clamp(1.5rem, 2.4vw, 2.25rem);
+}
+
+/*
+ * A luz rasante.
+ *
+ * Uma faixa clara atravessa o plano na diagonal quando o ponteiro entra. É o gesto de
+ * girar a peça sob a luz — e é a assinatura do site. Só nos planos que são links; um
+ * bloco de texto que brilha ao passar o mouse é enfeite.
+ */
+.plano--vivo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    108deg,
+    transparent 34%,
+    rgba(255, 255, 255, 0.085) 50%,
+    transparent 66%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.62s var(--curva);
+}
+
+.plano--vivo:hover::after,
+.plano--vivo:focus-visible::after {
+  transform: translateX(100%);
+}
+
+.plano--vivo {
+  transition: border-color 0.2s var(--curva), background-color 0.2s var(--curva);
+}
+
+.plano--vivo:hover {
+  border-color: var(--aresta-forte);
+  background-color: var(--plano-alto);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plano--vivo::after {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------- a capa */
+
+.capa {
+  /*
+   * Sem altura minima enquanto empilha. Com ela, o celular abria numa fera de tela
+   * cheia e o nome do estudio ficava abaixo da dobra -- a capa mostrava o simbolo e
+   * escondia de quem ele e.
+   */
+  display: grid;
+  align-content: center;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  padding-block: clamp(3rem, 7vw, 6rem);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 60rem) {
+  .capa {
+    /* A fera ocupa a esquerda e é maior que o texto: ela é o foco, não o enfeite. */
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(3rem, 6vw, 7rem);
+    min-height: min(88vh, 50rem);
+  }
+
+  .capa__fera {
+    max-width: 32rem;
+    max-height: none;
+  }
+}
+
+.capa__fera {
+  display: block;
+  width: 100%;
+  /*
+   * Limitada pela **altura** da tela, e nao so pela largura: num tablet de 768 a fera
+   * media 544px de lado e sozinha ocupava a viewport inteira. Aqui ela cede espaco
+   * para o nome caber junto.
+   */
+  max-width: min(22rem, 64vw);
+  max-height: 34vh;
+  object-fit: contain;
+  height: auto;
+  justify-self: center;
+  /* A logo vem sobre fundo preto; o filtro tira o retângulo e devolve o especular. */
+  filter: drop-shadow(0 0 60px rgba(198, 203, 209, 0.09));
+}
+
+.capa__nome {
+  font-size: clamp(3.2rem, 11vw, 8.5rem);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.035em;
+  line-height: 0.86;
+  background: linear-gradient(168deg, var(--brilho) 8%, #9aa1a9 58%, var(--brilho) 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.capa__linha {
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  color: var(--escovado);
+  margin-top: 1.6rem;
+}
+
+.capa__onde {
+  margin-top: 0.9rem;
+  color: var(--fosco);
+  font-size: 0.95rem;
+}
+
+/* ------------------------------------------------------------------ as seções */
+
+.secao {
+  padding-block: var(--secao);
+  border-top: 1px solid var(--aresta);
+}
+
+/*
+ * A secao em duas colunas: rotulo e titulo a esquerda, conteudo a direita.
+ *
+ * Existe por um motivo concreto. Uma coluna de texto com medida limitada -- que e o
+ * certo para ler -- deixa 60% de uma tela de 1600px em preto, e a pagina parece uma
+ * coluna de celular esticada. Alargar o paragrafo resolveria a mancha e estragaria a
+ * leitura: 130 caracteres por linha nao se le.
+ *
+ * A saida e dar **funcao** a largura em vez de preenche-la: o titulo sai do fluxo do
+ * texto e ocupa a coluna da esquerda, como numa revista. A medida continua protegida, a
+ * tela e usada, e a hierarquia melhora de quebra -- o titulo passa a ancorar a secao em
+ * vez de flutuar acima dela.
+ */
+.secao__grade {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+@media (min-width: 62rem) {
+  .secao__grade {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: clamp(3rem, 6vw, 7rem);
+    align-items: start;
+  }
+}
+
+.secao__titulo {
+  font-size: clamp(1.9rem, 1.4rem + 2vw, 3.2rem);
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+
+@media (min-width: 62rem) {
+  .secao__titulo {
+    /* Alinha a primeira linha do titulo com a primeira linha do texto ao lado. */
+    margin-bottom: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ os jogos
+ *
+ * Uma grade que já nasce preparada para o segundo jogo: `auto-fit` com piso de 26rem
+ * significa que acrescentar um cartão não mexe em CSS nenhum.
+ */
+
+.jogos {
+  display: grid;
+  gap: clamp(1rem, 1.8vw, 1.75rem);
+  /*
+   * Cartaz, e nao faixa. O teto de 25rem por coluna existe porque com **um** jogo o
+   * `1fr` esticava o cartao a 1400px e empurrava o conteudo todo para a esquerda: uma
+   * barra vazia. Com teto, um jogo e um cartaz; cinco jogos preenchem a fileira; e a
+   * composicao nao depende de quantos existem.
+   */
+  grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 25rem));
+  justify-content: start;
+}
+
+.jogo {
+  display: grid;
+  gap: 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  align-content: start;
+}
+
+.jogo__marca {
+  width: 100%;
+  max-width: 11rem;
+  height: auto;
+  /* O ícone do PaP é claro; no escuro ele precisa de uma aresta para não boiar. */
+  border: 1px solid var(--aresta);
+  display: block;
+}
+
+.jogo__nome {
+  font-family: "Chakra Petch", sans-serif;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+  font-weight: 700;
+  color: var(--brilho);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.jogo__resumo {
+  color: var(--fosco);
+  margin-top: 0.6rem;
+  font-size: 0.98rem;
+}
+
+.jogo__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brasa-viva);
+}
+
+.jogo__estado::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--brasa);
+  /* Losango, não círculo: o vocabulário aqui é de arestas. */
+  transform: rotate(45deg);
+  flex: none;
+}
+
+/* ------------------------------------------------------------- texto de seção */
+
+.prosa {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.prosa p {
+  color: var(--escovado);
+}
+
+.prosa strong {
+  color: var(--brilho);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------- contato */
+
+.contato {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  align-items: baseline;
+  margin-top: 1.6rem;
+}
+
+.contato__email {
+  font-family: "Chakra Petch", sans-serif;
+  font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.9rem);
+  font-weight: 600;
+  color: var(--brilho);
+  text-decoration: none;
+  border-bottom: 1px solid var(--aresta-forte);
+  padding-bottom: 0.15rem;
+  transition: color 0.18s var(--curva), border-color 0.18s var(--curva);
+}
+
+.contato__email:hover {
+  color: var(--brasa-viva);
+  border-color: var(--brasa);
+}
+
+/* -------------------------------------------------------------------- rodapé */
+
+.rodape {
+  padding-block: 3rem 4rem;
+  border-top: 1px solid var(--aresta);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.86rem;
+  color: var(--fosco-fraco);
+}
+
+.rodape a {
+  color: var(--fosco);
+  text-decoration: none;
+}
+
+.rodape a:hover {
+  color: var(--brasa-viva);
+}
+
+.rodape__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}

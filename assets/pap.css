@@ -1,0 +1,863 @@
+/*
+ * Ponta a Ponta — o sistema visual da seção do jogo.
+ *
+ * ### O outro lado do site
+ *
+ * A raiz é a forja: preto, metal escovado, cantos chanfrados. Aqui é o oposto exato —
+ * papel quadriculado, margem vermelha de caderno escolar, e caixas com **um ponto em
+ * cada canto**, que no jogo são os botões. Passar de `/` para `/pap/` é sair da oficina
+ * e sentar na carteira da escola.
+ *
+ * Duas coisas atravessam os dois mundos e fazem deles um site só: a fonte de corpo (IBM
+ * Plex Sans) e o laranja. Lá ele é aço na temperatura de trabalho; aqui é o traço do
+ * jogador um. Mesmo valor, dois significados.
+ *
+ * ### O que não se copia
+ *
+ * "Cartão branco com sombra e botão laranja" é o vocabulário de qualquer template dos
+ * últimos cinco anos, e não parece o PaP — parece qualquer coisa. Papel quadriculado com
+ * margem vermelha e ponto nos cantos não se confunde com nada.
+ *
+ * ### Largura
+ *
+ * Sem coluna estreita centralizada. O que tem teto é a medida do texto; a grade usa a
+ * tela que existir. Nos documentos legais, a largura vira índice fixo na lateral — que é
+ * como se lê um documento longo, e não rolando às cegas.
+ */
+
+@import url("fontes.css");
+
+:root {
+  --papel: #f8f9fa;
+  --superficie: #ffffff;
+  --tinta: #23262b;
+  --tinta-media: #5b6068;
+  --tinta-fraca: #8a9099;
+
+  --linha: #e4e7ea;
+  --linha-forte: #cdd2d7;
+
+  /* A grade do caderno e a margem vermelha: o desenho do jogo, literal. */
+  --grade: rgba(35, 38, 43, 0.055);
+  --margem: rgba(199, 81, 43, 0.3);
+
+  --laranja: #c7512b;
+  --laranja-vivo: #df5b30;
+  --ouro: #b8912a;
+  --verde: #2e7d5b;
+
+  /* O ponto cinza dos cantos, tirado do Palette.kt do jogo. */
+  --ponto: #8b8f94;
+
+  --secao: clamp(3.5rem, 7vw, 7rem);
+  --margem-lateral: clamp(1.25rem, 5vw, 5.5rem);
+  --medida: 66ch;
+
+  --curva: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  color: var(--tinta);
+  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  font-size: clamp(1rem, 0.94rem + 0.3vw, 1.125rem);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+
+  /*
+   * O papel: a grade de 28px do caderno, e a margem vermelha a 5.5rem da borda.
+   * `background-attachment: fixed` faria a grade deslizar sob o texto ao rolar, o que
+   * é justamente o que um caderno não faz.
+   */
+  background-color: var(--papel);
+  background-image:
+    linear-gradient(90deg, transparent calc(5.5rem - 1px), var(--margem) calc(5.5rem - 1px), var(--margem) 5.5rem, transparent 5.5rem),
+    linear-gradient(var(--grade) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
+}
+
+@media (max-width: 48rem) {
+  body {
+    /* No celular a margem vermelha encostaria no texto; some e sobra a grade. */
+    background-image:
+      linear-gradient(var(--grade) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+    background-size: 28px 28px, 28px 28px;
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-family: Poppins, "IBM Plex Sans", sans-serif;
+  color: var(--tinta);
+  text-wrap: balance;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+p {
+  margin: 0;
+  max-width: var(--medida);
+}
+
+a {
+  color: var(--laranja);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--laranja-vivo);
+}
+
+:focus-visible {
+  outline: 2px solid var(--laranja);
+  outline-offset: 3px;
+}
+
+.faixa {
+  padding-inline: var(--margem-lateral);
+}
+
+.faixa > * {
+  max-width: 100rem;
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------------ o cabeçalho */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--linha);
+}
+
+.topo__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+.topo__marca img {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: block;
+}
+
+.topo__voltar {
+  font-size: 0.85rem;
+  color: var(--tinta-media);
+  text-decoration: none;
+}
+
+.topo__voltar:hover {
+  color: var(--laranja);
+}
+
+/* ---------------------------------------------------------------------- a caixa
+ *
+ * A moldura de tudo: um retângulo branco com **um ponto cinza em cada canto**. É o
+ * botão do jogo, e é o que faz a página parecer o PaP e não um site qualquer.
+ */
+
+.caixa {
+  position: relative;
+  background: var(--superficie);
+  border: 1px solid var(--linha-forte);
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+.caixa::before,
+.caixa::after,
+.caixa > .cantos::before,
+.caixa > .cantos::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ponto);
+}
+
+.caixa::before {
+  top: 5px;
+  left: 5px;
+}
+
+.caixa::after {
+  top: 5px;
+  right: 5px;
+}
+
+.caixa > .cantos::before {
+  bottom: 5px;
+  left: 5px;
+}
+
+.caixa > .cantos::after {
+  bottom: 5px;
+  right: 5px;
+}
+
+/* -------------------------------------------------------------------- a capa */
+
+.capa {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: center;
+  padding-block: clamp(2.5rem, 6vw, 5.5rem);
+}
+
+@media (min-width: 62rem) {
+  .capa {
+    /*
+     * A coluna do texto e maior que a do tabuleiro. O titulo e o foco da pagina, e com
+     * as duas colunas iguais ele quebrava em quatro linhas -- "Feche o / quadrado." e
+     * uma frase curta partida no meio, que le pior do que uma linha inteira.
+     */
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+  }
+}
+
+.capa__titulo {
+  font-size: clamp(2.4rem, 1.5rem + 3.4vw, 4.6rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.capa__regra {
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.4rem);
+  color: var(--tinta-media);
+  margin-top: 1.4rem;
+}
+
+.capa__regra strong {
+  color: var(--tinta);
+  font-weight: 600;
+}
+
+.capa__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 2.2rem;
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0.6rem 1.5rem;
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 1px solid var(--linha-forte);
+  background: var(--superficie);
+  color: var(--tinta);
+  transition: transform 0.14s var(--curva), border-color 0.16s var(--curva),
+    background-color 0.16s var(--curva);
+}
+
+.botao:active {
+  transform: scale(0.97);
+}
+
+.botao:hover {
+  border-color: var(--ponto);
+}
+
+.botao--principal {
+  background: var(--laranja);
+  border-color: var(--laranja);
+  color: #fff;
+}
+
+.botao--principal:hover {
+  background: var(--laranja-vivo);
+  border-color: var(--laranja-vivo);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------- o tabuleiro
+ *
+ * A assinatura da seção: o tabuleiro do jogo desenhando a si mesmo. Os traços entram
+ * um a um e dois quadrados fecham — um de cada jogador. É a coisa mais característica
+ * do mundo do PaP, e é ela que abre a página em vez de uma captura de tela.
+ */
+
+.tabuleiro {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.tabuleiro .traco {
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: tracar 0.42s var(--curva) forwards;
+}
+
+.tabuleiro .marca {
+  opacity: 0;
+  animation: surgir 0.3s var(--curva) forwards;
+}
+
+@keyframes tracar {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabuleiro .traco,
+  .tabuleiro .marca {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ as seções */
+
+.secao {
+  padding-block: var(--secao);
+  border-top: 1px solid var(--linha);
+}
+
+.secao__grade {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+@media (min-width: 62rem) {
+  .secao__grade {
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    gap: clamp(3rem, 5vw, 5.5rem);
+    align-items: start;
+  }
+}
+
+.etiqueta {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--laranja);
+  margin: 0 0 0.8rem;
+}
+
+.secao__titulo {
+  font-size: clamp(1.7rem, 1.3rem + 1.8vw, 2.8rem);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------- os modos */
+
+.modos {
+  display: grid;
+  gap: clamp(0.85rem, 1.5vw, 1.25rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+}
+
+.modo__nome {
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin: 0 0 0.5rem;
+}
+
+.modo__texto {
+  color: var(--tinta-media);
+  font-size: 0.96rem;
+  margin: 0;
+}
+
+.modo__numero {
+  font-family: Poppins, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  line-height: 1;
+  color: var(--laranja);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* ------------------------------------------------------------------- a prosa */
+
+.prosa {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.prosa p {
+  color: var(--tinta-media);
+}
+
+.prosa strong {
+  color: var(--tinta);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------- documentos: índice lateral
+ *
+ * Política e exclusão são documentos longos. Numa tela larga o índice fica fixo na
+ * lateral e o texto rola ao lado — que é como se lê um documento, e é o que usa a
+ * largura sem esticar a linha. No celular vira uma lista no topo.
+ */
+
+.doc {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+  padding-block: clamp(2rem, 4vw, 3.5rem) var(--secao);
+}
+
+@media (min-width: 64rem) {
+  .doc {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+    gap: clamp(3rem, 5vw, 5rem);
+    align-items: start;
+  }
+}
+
+.indice {
+  font-size: 0.9rem;
+}
+
+@media (min-width: 64rem) {
+  .indice {
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+.indice__titulo {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin: 0 0 0.9rem;
+}
+
+.indice ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  counter-reset: item;
+}
+
+.indice ol a {
+  color: var(--tinta-media);
+  text-decoration: none;
+  display: block;
+  padding-left: 1.6rem;
+  position: relative;
+  line-height: 1.4;
+}
+
+.indice ol a::before {
+  counter-increment: item;
+  content: counter(item);
+  position: absolute;
+  left: 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  color: var(--tinta-fraca);
+  font-variant-numeric: tabular-nums;
+}
+
+.indice a:hover {
+  color: var(--laranja);
+}
+
+/* Link solto na barra lateral, fora da lista: comporta-se como link de texto. */
+.indice p a {
+  color: var(--laranja);
+}
+
+.doc__corpo {
+  display: grid;
+  gap: clamp(2rem, 3.5vw, 3rem);
+}
+
+.doc__corpo section {
+  scroll-margin-top: 2rem;
+}
+
+.doc__corpo h2 {
+  font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem);
+  font-weight: 600;
+  margin: 0 0 0.9rem;
+}
+
+.doc__corpo p + p {
+  margin-top: 0.9rem;
+}
+
+.doc__corpo p {
+  color: var(--tinta-media);
+}
+
+.doc__corpo strong {
+  color: var(--tinta);
+  font-weight: 600;
+}
+
+.doc__corpo ul {
+  margin: 0.9rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--tinta-media);
+  max-width: var(--medida);
+  display: grid;
+  gap: 0.45rem;
+}
+
+/* A ficha do topo do documento: vigência, contato, responsável. */
+
+.ficha {
+  display: grid;
+  gap: 1.25rem 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+}
+
+.ficha dt {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin-bottom: 0.3rem;
+}
+
+.ficha dd {
+  margin: 0;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+/* Aviso: a caixa laranja clara que marca o que não dá para desfazer. */
+
+.aviso {
+  border-left: 3px solid var(--laranja);
+  background: rgba(199, 81, 43, 0.045);
+  padding: 1rem 1.25rem;
+}
+
+.aviso p {
+  color: var(--tinta);
+  max-width: none;
+}
+
+/* -------------------------------------------------------------------- rodapé */
+
+.rodape {
+  padding-block: 2.5rem 3.5rem;
+  border-top: 1px solid var(--linha);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 2rem;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.86rem;
+  color: var(--tinta-fraca);
+}
+
+.rodape a {
+  color: var(--tinta-media);
+  text-decoration: none;
+}
+
+.rodape a:hover {
+  color: var(--laranja);
+}
+
+.rodape__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+/* ------------------------------------------------ tabela, nota e botão do documento
+ *
+ * As três classes vêm do texto legal que já existia: a tabela de "que dado, para quê,
+ * base legal", as notas de rodapé de seção, e o botão do formulário de exclusão. Elas
+ * mudaram de moldura, não de conteúdo — então ganham estilo aqui em vez de o texto ser
+ * reescrito para caber no que já havia.
+ */
+
+.rolagem {
+  /* Numa tela estreita a tabela rola dentro do próprio bloco. O corpo da página nunca
+     rola de lado: isso é o que separa uma tabela larga de um layout quebrado. */
+  overflow-x: auto;
+  margin-top: 1.1rem;
+  border: 1px solid var(--linha);
+  background: var(--superficie);
+}
+
+.rolagem table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 34rem;
+  font-size: 0.92rem;
+}
+
+.rolagem th,
+.rolagem td {
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--linha);
+  vertical-align: top;
+}
+
+.rolagem th {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  font-weight: 500;
+  background: var(--papel);
+}
+
+.rolagem tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.rolagem td {
+  color: var(--tinta-media);
+}
+
+.nota {
+  font-size: 0.92rem;
+  color: var(--tinta-media);
+  margin-top: 1.1rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--linha-forte);
+  max-width: var(--medida);
+}
+
+.nota.atencao {
+  border-left-color: var(--laranja);
+  color: var(--tinta);
+}
+
+/* O botão do formulário de exclusão, dentro do corpo do documento. */
+.acao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  margin-top: 1.1rem;
+  padding: 0.6rem 1.5rem;
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  background: var(--laranja);
+  border: 1px solid var(--laranja);
+  color: #fff;
+  transition: transform 0.14s var(--curva), background-color 0.16s var(--curva);
+}
+
+.acao:hover {
+  background: var(--laranja-vivo);
+  border-color: var(--laranja-vivo);
+  color: #fff;
+}
+
+.acao:active {
+  transform: scale(0.97);
+}
+
+/* ---------------------------------------------------------------- o formulário
+ *
+ * Campos são **encaixados**, não elevados: fundo um degrau mais escuro que o papel,
+ * porque um campo recebe conteúdo em vez de apresentá-lo. É o que diz "escreva aqui"
+ * sem precisar de borda grossa.
+ *
+ * Alvos de toque de 44px, que é o mínimo da WCAG e o tamanho de um dedo.
+ */
+
+.formulario {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 34rem;
+}
+
+.campo {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.campo__rotulo {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tinta-media);
+}
+
+.campo__rotulo span {
+  color: var(--tinta-fraca);
+  letter-spacing: 0.1em;
+}
+
+.campo__dica {
+  font-size: 0.86rem;
+  color: var(--tinta-media);
+  margin: 0;
+  max-width: none;
+}
+
+.campo input[type="email"],
+.campo input[type="text"],
+.campo textarea {
+  font: inherit;
+  font-size: 1rem;
+  color: var(--tinta);
+  background: var(--papel);
+  border: 1px solid var(--linha-forte);
+  padding: 0.7rem 0.85rem;
+  min-height: 2.9rem;
+  width: 100%;
+  transition: border-color 0.16s var(--curva), background-color 0.16s var(--curva);
+}
+
+.campo textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.campo input:hover,
+.campo textarea:hover {
+  border-color: var(--ponto);
+}
+
+.campo input:focus-visible,
+.campo textarea:focus-visible {
+  outline: 2px solid var(--laranja);
+  outline-offset: 1px;
+  background: var(--superficie);
+}
+
+/* O navegador só marca isto depois que a pessoa tenta enviar, e não enquanto digita. */
+.campo input:user-invalid,
+.campo textarea:user-invalid {
+  border-color: var(--laranja);
+}
+
+/* A confirmação: caixa de marcar com alvo de toque que passa do desenho. */
+.confirma {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--tinta);
+}
+
+.confirma input[type="checkbox"] {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.15rem 0 0;
+  border: 1px solid var(--linha-forte);
+  background: var(--papel);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Estende o alvo para 44px sem inchar o desenho. */
+.confirma input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  inset: -0.7rem;
+}
+
+.confirma input[type="checkbox"]:checked {
+  background: var(--laranja);
+  border-color: var(--laranja);
+}
+
+.confirma input[type="checkbox"]:checked::after {
+  content: "";
+  width: 0.65rem;
+  height: 0.35rem;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.confirma input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--laranja);
+  outline-offset: 2px;
+}
+
+/* A armadilha de robô: invisível para gente, preenchida por script automático. */
+.armadilha {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.formulario button {
+  justify-self: start;
+}
