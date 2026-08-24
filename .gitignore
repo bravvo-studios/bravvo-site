@@ -2,3 +2,8 @@
 .DS_Store
 Thumbs.db
 *.log
+
+# Prints soltos na pasta. Sem esta regra elas entram no commit e passam a ser
+# servidas no dominio: bravvostudios.com.br/Captura%20de%20tela....png
+Captura de tela*.png
+Screenshot*.png
