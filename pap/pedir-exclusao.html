@@ -67,7 +67,26 @@
         <input type="hidden" name="access_key" value="eb4ef2a3-d7b2-4466-b955-41a709b73b66">
         <input type="hidden" name="subject" value="Ponta a Ponta: pedido de exclusão de conta">
         <input type="hidden" name="from_name" value="Site do Ponta a Ponta">
-        <input type="hidden" name="_next" value="https://bravvostudios.com.br/pap/pedido-recebido.html">
+        <!--
+          `redirect`, e nao `_next`.
+
+          `_next` e a convencao do FormSubmit e do Netlify; o Web3Forms nao a conhece,
+          entao ele tratava a linha como **um campo qualquer do formulario**. O efeito
+          era duplo e silencioso: quem enviava caia na pagina de sucesso do proprio
+          Web3Forms em vez da nossa, e o e-mail chegava com uma linha "next" seguida da
+          URL, no meio dos dados do pedido.
+        -->
+        <input type="hidden" name="redirect" value="https://bravvostudios.com.br/pap/pedido-recebido.html">
+
+        <!--
+          Os `name` dos campos abaixo são o que vira **rótulo no e-mail**: o Web3Forms
+          manda a mensagem com o nome do campo, e não com o <label> que a página mostra.
+          Por isso eles são escritos como se lêem, com acento e maiúscula.
+
+          O `email` continua sendo `email`: o serviço usa justamente esse nome para pôr
+          o responder-para na mensagem, e renomeá-lo tiraria a resposta direta a quem
+          fez o pedido.
+        -->
 
         <!-- A armadilha: robô preenche, gente não vê. O serviço descarta o envio. -->
         <div class="armadilha" aria-hidden="true">
@@ -92,7 +111,7 @@
             O <strong>@</strong> que aparece no seu perfil. Ajuda a confirmar que a
             conta é sua.
           </p>
-          <input type="text" id="handle" name="identificador" autocomplete="off"
+          <input type="text" id="handle" name="Identificador (@)" autocomplete="off"
                  placeholder="@seunome">
         </div>
 
@@ -100,12 +119,12 @@
           <label class="campo__rotulo" for="obs">
             Alguma observação <span>(opcional)</span>
           </label>
-          <textarea id="obs" name="observacao"
+          <textarea id="obs" name="Observação"
                     placeholder="Se tiver algo que a gente precise saber."></textarea>
         </div>
 
         <label class="confirma">
-          <input type="checkbox" name="confirmacao" value="sim" required>
+          <input type="checkbox" name="Confirmou que é definitivo" value="sim" required>
           <span>
             Entendi que a exclusão é definitiva e que não dá para recuperar a conta
             depois de concluída.
